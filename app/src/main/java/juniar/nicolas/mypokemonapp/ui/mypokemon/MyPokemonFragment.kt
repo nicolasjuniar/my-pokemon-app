@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
 import juniar.nicolas.mypokemonapp.base.BaseViewBindingFragment
 import juniar.nicolas.mypokemonapp.databinding.FragmentMyPokemonBinding
@@ -85,9 +86,12 @@ class MyPokemonFragment : BaseViewBindingFragment<FragmentMyPokemonBinding>() {
         with(viewModel) {
             observeViewModel(this)
             observeMyPokemon().onChangeValue {
-                pokemonListAdapter.setData(it.filter { myPokemon ->
+                val filteredPokemons = it.filter { myPokemon ->
                     myPokemon.status == CAPTURED
-                })
+                }
+                viewBinding.emptyMessage.isVisible = filteredPokemons.isEmpty()
+                viewBinding.rvPokemonList.isVisible = filteredPokemons.isNotEmpty()
+                pokemonListAdapter.setData(filteredPokemons)
             }
         }
     }

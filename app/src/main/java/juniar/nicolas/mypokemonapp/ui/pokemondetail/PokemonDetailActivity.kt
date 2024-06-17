@@ -194,8 +194,8 @@ class PokemonDetailActivity : BaseViewBindingActivity<ActivityPokemonDetailBindi
                     MyPokemonModel(
                         pokemonPreferenceManager.catchCounter,
                         it,
-                        pokemonName.orEmpty(),
                         "",
+                        pokemonName.orEmpty(),
                         pokedexNumber,
                         -1,
                         CAPTURED
