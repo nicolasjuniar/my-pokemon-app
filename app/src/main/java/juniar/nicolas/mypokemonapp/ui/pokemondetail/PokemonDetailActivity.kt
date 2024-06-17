@@ -49,7 +49,7 @@ class PokemonDetailActivity : BaseViewBindingActivity<ActivityPokemonDetailBindi
             holderResBinding = {
                 ViewholderAbilityBinding.inflate(LayoutInflater.from(it.context), it, false)
             },
-            onBind = { value, binding, index ->
+            onBind = { value, binding, _ ->
                 binding.tvAbility.text =
                     value.ability?.name + if (value.isHidden == true) " (Hidden)" else ""
             }
@@ -127,7 +127,7 @@ class PokemonDetailActivity : BaseViewBindingActivity<ActivityPokemonDetailBindi
                 "Release Pokemon",
                 "Release this Pokemon?"
             ) {
-                viewModel.releasePokemon(pokemonNumber?.toInt() ?: -1)
+                viewModel.releasePokemon(pokemonNumber)
             }.show()
         }
     }

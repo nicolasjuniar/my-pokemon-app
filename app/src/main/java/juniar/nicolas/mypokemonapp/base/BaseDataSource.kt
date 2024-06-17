@@ -29,7 +29,6 @@ abstract class BaseDataSource {
         return try {
             val response = request()
             val body = response.body()
-            val header = response.headers()
             if (!response.isSuccessful || body == null) {
                 val message = response.errorBody()?.string()
                 return errorState(message ?: "")
