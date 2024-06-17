@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".MyPokemonApp"
         android:allowBackup="true"
@@ -12,12 +14,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyPokemonApp"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
             android:name=".ui.splashscreen.SplashScreenActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.MyPokemonApp">
+            android:theme="@style/Theme.MyPokemonApp.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,7 +29,10 @@
         </activity>
         <activity
             android:name=".ui.home.HomeActivity"
-            android:theme="@style/Theme.MyPokemonApp" />
+            android:theme="@style/Theme.MyPokemonApp.NoActionBar" />
+        <activity
+            android:name=".ui.pokemondetail.PokemonDetailActivity"
+            android:theme="@style/Theme.MyPokemonApp.NoActionBar" />
     </application>
 
 </manifest>

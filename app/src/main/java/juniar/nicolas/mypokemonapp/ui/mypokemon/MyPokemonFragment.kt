@@ -1,4 +1,4 @@
-package juniar.nicolas.mypokemonapp.ui.pokemonlist
+package juniar.nicolas.mypokemonapp.ui.mypokemon
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,47 +7,54 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.recyclerview.widget.GridLayoutManager
 import juniar.nicolas.mypokemonapp.base.BaseViewBindingFragment
-import juniar.nicolas.mypokemonapp.databinding.FragmentPokemonListBinding
+import juniar.nicolas.mypokemonapp.databinding.FragmentMyPokemonBinding
 import juniar.nicolas.mypokemonapp.databinding.ViewholderPokemonBinding
-import juniar.nicolas.mypokemonapp.model.GeneralPokemonModel
+import juniar.nicolas.mypokemonapp.model.MyPokemonModel
 import juniar.nicolas.mypokemonapp.ui.pokemondetail.PokemonDetailActivity
+import juniar.nicolas.mypokemonapp.ui.pokemondetail.PokemonDetailActivity.Companion.ADDITIONAL_NAME
+import juniar.nicolas.mypokemonapp.ui.pokemondetail.PokemonDetailActivity.Companion.MY_POKEMON
 import juniar.nicolas.mypokemonapp.ui.pokemondetail.PokemonDetailActivity.Companion.PAGE_TYPE
 import juniar.nicolas.mypokemonapp.ui.pokemondetail.PokemonDetailActivity.Companion.POKEDEX_NUMBER
 import juniar.nicolas.mypokemonapp.ui.pokemondetail.PokemonDetailActivity.Companion.POKEMON_NAME
-import juniar.nicolas.mypokemonapp.ui.pokemondetail.PokemonDetailActivity.Companion.RANDOM_POKEMON
+import juniar.nicolas.mypokemonapp.ui.pokemondetail.PokemonDetailActivity.Companion.POKEMON_NUMBER
 import juniar.nicolas.mypokemonapp.ui.pokemondetail.PokemonDetailActivity.Companion.RENAME_COUNTER
+import juniar.nicolas.mypokemonapp.util.Constant.Companion.CAPTURED
 import juniar.nicolas.mypokemonapp.util.DiffCallback
 import juniar.nicolas.mypokemonapp.util.GeneralRecyclerViewBindingAdapter
 import juniar.nicolas.mypokemonapp.util.getPokemonArtwork
 import juniar.nicolas.mypokemonapp.util.onLoad
 import juniar.nicolas.mypokemonapp.util.openActivity
-import juniar.nicolas.mypokemonapp.util.toPokedexNumber
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PokemonListFragment : BaseViewBindingFragment<FragmentPokemonListBinding>() {
+class MyPokemonFragment : BaseViewBindingFragment<FragmentMyPokemonBinding>() {
 
-    private val viewModel: PokemonListViewModel by viewModel()
+    private val viewModel: MyPokemonViewModel by viewModel()
+
+    private var initialized = false
 
     private val pokemonListAdapter by lazy {
-        GeneralRecyclerViewBindingAdapter<GeneralPokemonModel, ViewholderPokemonBinding>(
+        GeneralRecyclerViewBindingAdapter<MyPokemonModel, ViewholderPokemonBinding>(
             diffCallback = DiffCallback(),
             holderResBinding = {
                 ViewholderPokemonBinding.inflate(LayoutInflater.from(it.context), it, false)
             },
-            onBind = { value, binding, index ->
-                binding.tvPokemonNumber.text = (index + 1).toPokedexNumber()
-                binding.tvPokemonName.text = value.name
+            onBind = { value, binding, _ ->
+                binding.tvPokemonNumber.text = value.pokemonSpecies
+                binding.tvPokemonName.text = value.pokemonName + value.additionalName
                 binding.pokemonSprite.onLoad(
                     requireActivity(),
-                    getPokemonArtwork(index + 1)
+                    getPokemonArtwork(value.pokedexNumber)
                 )
             },
-            itemListener = { value, index, _ ->
+            itemListener = { value, _, _ ->
                 requireActivity().openActivity<PokemonDetailActivity>(
                     bundleOf(
-                        POKEDEX_NUMBER to index + 1,
-                        POKEMON_NAME to value.name,
-                        PAGE_TYPE to RANDOM_POKEMON
+                        POKEDEX_NUMBER to value.pokedexNumber,
+                        POKEMON_NAME to value.pokemonName,
+                        ADDITIONAL_NAME to value.additionalName,
+                        POKEMON_NUMBER to value.pokemonNumber,
+                        RENAME_COUNTER to value.renameCounter,
+                        PAGE_TYPE to MY_POKEMON
                     )
                 )
             }
@@ -57,7 +64,7 @@ class PokemonListFragment : BaseViewBindingFragment<FragmentPokemonListBinding>(
     override fun getContentView(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ) = FragmentPokemonListBinding.inflate(layoutInflater, container, false)
+    ) = FragmentMyPokemonBinding.inflate(layoutInflater, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -66,15 +73,29 @@ class PokemonListFragment : BaseViewBindingFragment<FragmentPokemonListBinding>(
             layoutManager = GridLayoutManager(requireActivity(), 3)
         }
         observeData()
-        viewModel.fetchListPokemon()
+        refresh()
+        initialized = true
+    }
+
+    private fun refresh() {
+        viewModel.fetchMyPokemon()
     }
 
     private fun observeData() {
         with(viewModel) {
             observeViewModel(this)
-            observeListPokemon().onChangeValue {
-                pokemonListAdapter.setData(it)
+            observeMyPokemon().onChangeValue {
+                pokemonListAdapter.setData(it.filter { myPokemon ->
+                    myPokemon.status == CAPTURED
+                })
             }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (initialized) {
+            refresh()
         }
     }
 }

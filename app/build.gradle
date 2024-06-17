@@ -24,6 +24,12 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField("String", "BASE_URL_POKEAPI", "\"https://pokeapi.co/api/v2/\"")
+            buildConfigField("String", "BASE_URL_LOCAL", "\"https://192.168.0.168:3000/\"")
+        }
+        debug {
+            buildConfigField("String", "BASE_URL_POKEAPI", "\"https://pokeapi.co/api/v2/\"")
+            buildConfigField("String", "BASE_URL_LOCAL", "\"http://192.168.0.168:3000/\"")
         }
     }
     compileOptions {
@@ -36,6 +42,7 @@ android {
     buildFeatures {
         compose true
         viewBinding true
+        buildConfig true
     }
     composeOptions {
         kotlinCompilerExtensionVersion '1.5.1'
@@ -50,7 +57,9 @@ android {
 dependencies {
 
     implementation libs.androidx.core.ktx
+    implementation libs.androidx.lifecycle.extension
     implementation libs.androidx.lifecycle.runtime.ktx
+    implementation libs.androidx.lifecycle.viewmodel.ktx
     implementation libs.androidx.activity.compose
     implementation platform(libs.androidx.compose.bom)
     implementation libs.androidx.ui
@@ -61,6 +70,13 @@ dependencies {
     implementation libs.androidx.appcompat
     implementation libs.android.material
     implementation libs.koin
+    implementation libs.glide
+    implementation libs.gson
+    implementation libs.retrofit
+    implementation libs.retrofitConverterGson
+    implementation libs.okhttp
+    implementation libs.okhttpUrlConnection
+    implementation libs.okhttpLoggingInterceptor
     testImplementation libs.junit
     androidTestImplementation libs.androidx.junit
     androidTestImplementation libs.androidx.espresso.core

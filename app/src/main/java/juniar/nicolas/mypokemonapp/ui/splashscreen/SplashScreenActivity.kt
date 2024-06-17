@@ -11,10 +11,6 @@ import juniar.nicolas.mypokemonapp.util.openActivity
 class SplashScreenActivity : BaseViewBindingActivity<ActivitySplashScreenBinding>() {
     override fun getContentView() = ActivitySplashScreenBinding.inflate(layoutInflater)
 
-    override fun initLayout(savedInstanceState: Bundle?) {
-        // unused
-    }
-
     override fun onViewReady(savedInstanceState: Bundle?) {
         Handler(Looper.getMainLooper()).postDelayed({
             openActivity<HomeActivity>()

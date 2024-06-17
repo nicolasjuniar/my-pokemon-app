@@ -6,6 +6,7 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
+    <color name="black_900">#303030</color>
     <color name="white">#FFFFFFFF</color>
     <color name="cloud">#f2f5f8</color>
     <color name="color_pallete_1">#EE1515</color>
@@ -28,4 +29,5 @@
     <color name="dark">#4e403f</color>
     <color name="steel">#74a2b9</color>
     <color name="fairy">#ba80b5</color>
+    <color name="border_color">#EDEDED</color>
 </resources>
