@@ -20,12 +20,22 @@ android {
         }
     }
 
+    signingConfigs {
+        release {
+            keyAlias 'key0'
+            keyPassword '6RtlxiAPbxdEoMz'
+            storeFile file('my-pokemon-app.jks')
+            storePassword 'ftw8BvFxz1QhhIv'
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField("String", "BASE_URL_POKEAPI", "\"https://pokeapi.co/api/v2/\"")
             buildConfigField("String", "BASE_URL_LOCAL", "\"https://192.168.0.168:3000/\"")
+            signingConfig signingConfigs.release
         }
         debug {
             buildConfigField("String", "BASE_URL_POKEAPI", "\"https://pokeapi.co/api/v2/\"")
